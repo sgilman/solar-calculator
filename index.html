@@ -1,0 +1,309 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<title>jQuery.scrollTo</title>
+	<meta name="keywords" content="javascript, jquery, plugins, scroll, scrollTo, smooth, animation, to, effect, ariel, flesler, window, overflow, element, navigation, customizable" />
+	<meta name="description" content="Demo of jQuery.scrollTo. Lightweight, cross-browser and highly customizable animated scrolling with jQuery, made by Ariel Flesler." />
+	<meta name="robots" content="index,follow" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery.scrollTo.min.js"></script>
+	<script type="text/javascript">
+		jQuery(function( $ ){
+			/**
+			 * Demo binding and preparation, no need to read this part
+			 */
+				//borrowed from jQuery easing plugin
+				//http://gsgd.co.uk/sandbox/jquery.easing.php
+				$.easing.elasout = function(x, t, b, c, d) {
+					var s=1.70158;var p=0;var a=c;
+					if (t==0) return b;  if ((t/=d)==1) return b+c;  if (!p) p=d*.3;
+					if (a < Math.abs(c)) { a=c; var s=p/4; }
+					else var s = p/(2*Math.PI) * Math.asin (c/a);
+					return a*Math.pow(2,-10*t) * Math.sin( (t*d-s)*(2*Math.PI)/p ) + c + b;
+				};
+				$('a.back').click(function() {
+					$(this).parents('div.pane').scrollTo(0, 800, { queue:true });
+					$(this).parents('div.section').find('span.message').text( this.title);
+					return false;
+				});
+				//just for the example, to stop the click on the links.
+				$('ul.links').click(function(e){
+					var link = e.target;
+					if (link.target === '_blank') {
+						return;
+					}
+					e.preventDefault();
+					link.blur();
+					if (link.title) {
+						$(this).parent().find('span.message').text(link.title);
+					}
+				});
+
+			// This one is important, many browsers don't reset scroll on refreshes
+			// Reset all scrollable panes to (0,0)
+			$('div.pane').scrollTo(0);
+			// Reset the screen to (0,0)
+			$.scrollTo(0);
+
+			var currentBox = 0;
+
+      $('.nav').click(function () {
+
+			console.log($('.box').length);
+
+			if ($(this).val() == 'Next') {
+				if (currentBox < ($('#container > .box').length - 1)) {
+					console.log(currentBox);
+					currentBox++;
+					}
+				} else {
+				if (currentBox > 0) currentBox--;
+			}
+          $('#container').scrollTo($('#container > .box:eq('+currentBox+')'), 1200);
+      });
+
+
+		});
+	</script>
+  <style>
+    body {
+      padding: 50px;
+	  background-image:url("http://web.mit.edu/sgilman/www/img/landscape_agriculture_solar.jpg");
+	  background-size: cover;
+	  background-attachment: fixed;
+		font-family: sans-serif;
+    }
+    #container {
+        margin: 10px;
+        overflow:hidden;
+        height: 300px;
+        width: 100%;
+		background-color: rgba(118, 119, 119, 0.5);
+
+    }
+    .box {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+	<h1>Solar calculator</h1>
+	<div id="container">
+
+    <div class="box">
+      <h2>Purpose of this tool</h2>
+			<p>This solar calculator is designed to give you a very rough estimate of how much a solar system would cost to meet your needs. It will also demonstrate some of the options you have to play with the cost and robustness of your system. After going through this exercise, you will be better prepared to speak with a solar installer.</p>
+    </div>
+
+    <div class="box">
+      <h2>Do you have an electric bill handy?</h2>
+			<p>Your bill lists your monthly electricity consumption, which can help estimate how many solar panels you would need. If not, we can use a default value for you.</p>
+			<label for="yesbill">Yes</label>
+			<input type="radio" id="yesbill" name="bill" value="yes">
+			<label for="nobill">No</label>
+			<input type="radio" id="nobill" name="bill" value="no">
+    </div>
+
+		<div class="box" id="two">
+		</div>
+
+  	<div class="box">
+			<h2>Your results</h2>
+			<table class="output">
+
+			</table>
+		</div>
+
+		<div class="box">
+			<h2>How many days'' of storage do you need?</h2>
+			<input type="number" id="storage" value=1>
+			<p>This is the number of days your solar system can provide you power without any connectino to the grid or any sunlight, such as during a hurricane. Before 2017, the average PREPA blackout lasted aproximately 14 hours, so one day of battery storage would have provided power for most blackouts. Clearly, this was not the case after Hurricane Maria, when most households were out of power for months. The reliability of the central grid is hard to predict, given the changes that it will undergo in the next few years as a result of privatization.</p>
+			<p>In addition to weighing the likelihood of future prolonged outages, you should consider how essential electricity is for your life. If you rely on electricity for medical needs, for example refigerating insulin, it may be worth investing in more storage than if you only need electricity to charge your phone. </p>
+		</div>
+
+		<div class="box">
+			<h2>Your results</h2>
+			<table class="output">
+
+			</table>
+		</div>
+
+		<div class="box">
+				<h2>Consumption desired</h2>
+				<p>If you're planning to stay connected to the grid, you don't necessarily need your solar panel to match your electricity consumption. This would make the installation less expensive while still saving you money on your monthly electricity bill. However, the tradeoff is that in an outage, you will have to limit your consumption more.</p>
+				<p>Feel free to experiment with different levels of service to see how it affects the cost.</p>
+				<label for="desiredcons">What percentage of your electricity consumption would you like your panel to meet?</label>
+				<input type="number" id="desiredcons" value=100>
+		</div>
+
+		<div class="box">
+			<h2>Your results</h2>
+			<table class="output">
+
+			</table>
+		</div>
+
+<!-- advanced options -->
+
+	<div class="box">
+			<h2>Advanced options</h2>
+			<p>This section allows you to change technical details about the solar panels. You can complete this section after talking with a solar provider to get a more detailed estimate of how much your solar system would cost</p>
+  </div>
+
+	<div class="box">
+		<h2>Capacity factor</h2>
+		<p>This is the average output of the solar panel as a percentage of its maximum output.</p>
+		<input type="number" id="capfact" value=0.2>
+	</div>
+
+	<div class="box">
+		<h2>Wattage</h2>
+		<p>The maximum amount of power (in Watts) that one square meter of panel can produce.</p>
+		<input type="number" id="wattage" value=250>
+	</div>
+
+	<div class="box">
+		<h2>Panel cost</h2>
+		<p>The cost per square meter of solar panels</p>
+		<input type="number" id="pancost" value=1000>
+	</div>
+
+	<div class="box">
+		<h2>Battery cost</h2>
+		<p>The cost per kilowatt-hour (kWh) of battery storage</p>
+		<input type="number" id="batcost" value=400>
+	</div>
+
+	<div class="box">
+		<h2>Your results</h2>
+		<table class="output">
+		</table>
+	</div>
+
+</div>
+  <input type="button" class="nav" value="Back" id="back">
+  <input type="button" class="nav" value="Next" id="testbutton">
+
+	<input type="button" id="newbutton" value="new button">
+<div style="display:none" id="bullpen">
+	<div id="household-container">
+		<h2>How many people are in your household?</h2>
+		<input type="number" id="household">
+	</div>
+	<div id="consumption-container">
+		<h2>What is your monthly electric consumption?</h2>
+		<input type="number" id="consumption">
+		<p>On your bill from PREPA/AEEPR, there is a number under "Consumo kWh", which should be the monthly consumption. </p>
+
+	</div>
+</div>
+<script>
+$('#two').html($('#household-container').html());
+
+$('input[type=radio][name=bill]').change(function () {
+	console.log('yes');
+	console.log(this.value);
+	if (this.value == 'yes') {
+
+		$('#two').html($('#consumption-container').html());
+
+	} else {
+		$('#two').html($('#household-container').html());
+	}
+});
+
+
+// $('#submit').on('click', buttonPress);
+
+// $("#newbutton").click(buttonPress);
+
+$('input').click(buttonPress);
+
+function buttonPress() {
+
+var table_data = [];
+
+
+// cost of panel installation
+
+var capacity_factor = $('#capfact').val()
+  , watts_per_m2 = $('#wattage').val()
+  , desired_consumption_pct = $('#desiredcons').val()
+  , panel_cost_m2 = $('#pancost').val();
+
+var yearly_panel_production = watts_per_m2/1000 * 365 * 24 * capacity_factor;
+
+//  var yearly_household_consumption = ($('#yesbill').val() == "yes") ? ($('#consumption').val() * 12) : 6300;
+var yearly_household_consumption;
+
+if ($('input[name=bill]:checked').val() == "yes") {
+	yearly_household_consumption = $('#consumption').val() * 12;
+} else {
+	yearly_household_consumption = $('#household').val() * 6300;
+}
+
+var area_needed = Math.ceil(desired_consumption_pct / (yearly_panel_production * 100 / yearly_household_consumption));
+
+table_data.push({name:'Area needed (m^2)', data:area_needed});
+
+console.log(area_needed);
+// console.log(panel_cost_m2);
+
+var panel_install_cost = area_needed * panel_cost_m2
+table_data.push({name:'Panel cost', data:panel_install_cost.toFixed(2)});
+
+console.log('panel install cost: ' + panel_install_cost.toFixed(2));
+
+// cost of batter installlation
+var battery_install_cost = $('#storage').val() * yearly_household_consumption/365.0 * $('#batcost').val()
+
+console.log('battery cost: ' + battery_install_cost)
+table_data.push({name:'Battery cost', data:battery_install_cost.toFixed(2)});
+
+
+// total cost
+var total_cost = panel_install_cost + battery_install_cost;
+console.log('total cost: ' + total_cost)
+
+table_data.push({name:'Total cost', data:total_cost.toFixed(2)});
+
+
+var subsidized_cost = total_cost * (1 - .30); // current federal subsidy rate is 30%
+console.log('subsidized_cost: ' + subsidized_cost.toFixed(2));
+
+table_data.push({name:'Subsidized cost', data:subsidized_cost.toFixed(2)});
+
+// generation
+
+var annual_generation = yearly_panel_production * area_needed;
+console.log('annual generation: ' + annual_generation)
+
+//offset costs
+
+var offset_costs = Math.min(annual_generation, yearly_household_consumption) * 0.22 // retail electric rate
+console.log('offset costs: ' + offset_costs)
+
+//net metering
+var net_metering_revenue = Math.max(0, annual_generation - yearly_household_consumption) * 0.10 * 0.75 // net metering rate is $0.10, PREPA reimburses 75% of credits
+console.log('net metering: ' + net_metering_revenue)
+
+var payback_period = subsidized_cost / (offset_costs + net_metering_revenue);
+console.log(payback_period);
+
+console.log(table_data);
+
+console.log($('#household').val());
+
+$('tr:has(td)').remove();
+
+table_data.forEach(function (el) {
+	var row = "<tr><td>" + el.name + "</td><td>" + el.data + "</td></tr>";
+	$('.output').append(row);
+	});
+
+};
+</script>
+</body>
+</html>
